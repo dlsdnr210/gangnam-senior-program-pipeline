@@ -6,7 +6,6 @@ from urllib3.util.retry import Retry
 
 from .config import settings
 
-
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "

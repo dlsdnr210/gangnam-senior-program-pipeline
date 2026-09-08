@@ -1,19 +1,18 @@
 """전체 실무형 데이터 파이프라인 오케스트레이션."""
-
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 
 from .crawling import create_batch_id, run_crawling
 from .detail import run_detail_collection
 from .extract import run_extract
-from .load import load_processed_csv, insert_run_history
+from .load import insert_run_history, load_processed_csv
 from .logging_config import setup_logger
 from .preprocess import run_preprocess
 from .state import load_seen_urls, save_seen_urls
-
 
 logger = setup_logger(__name__)
 
@@ -45,7 +44,8 @@ def run_pipeline(
     start_page: int | None = None,
     end_page: int | None = None,
 ) -> PipelineResult:
-    started_at = datetime.now()
+    started_at = datetime.now(ZoneInfo("Asia/Seoul"))
+
     batch_id = create_batch_id()
 
     list_count = 0
@@ -92,7 +92,7 @@ def run_pipeline(
             insert_run_history(
                 batch_id=batch_id,
                 started_at=started_at,
-                finished_at=datetime.now(),
+                finished_at=datetime.now(ZoneInfo("Asia/Seoul")),
                 status="SUCCESS_NO_NEW_DATA",
                 list_count=list_count,
                 detail_count=0,
@@ -136,7 +136,7 @@ def run_pipeline(
         insert_run_history(
             batch_id=batch_id,
             started_at=started_at,
-            finished_at=datetime.now(),
+            finished_at=datetime.now(ZoneInfo("Asia/Seoul")),
             status="SUCCESS",
             list_count=list_count,
             detail_count=detail_count,
@@ -165,15 +165,14 @@ def run_pipeline(
 
     except Exception as exc:
         logger.exception(
-            "파이프라인 실패 | batch=%s | %s",
+            "파이프라인 실패 | batch=%s",
             batch_id,
-            exc,
         )
         try:
             insert_run_history(
                 batch_id=batch_id,
                 started_at=started_at,
-                finished_at=datetime.now(),
+                finished_at=datetime.now(ZoneInfo("Asia/Seoul")),
                 status="FAILED",
                 list_count=list_count,
                 detail_count=detail_count,

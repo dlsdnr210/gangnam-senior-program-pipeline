@@ -1,8 +1,8 @@
 """공지사항 상세페이지 수집 및 상세 정보 추출."""
 
-from pathlib import Path
 import re
 import time
+from pathlib import Path
 
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -10,7 +10,6 @@ from bs4 import BeautifulSoup
 from .config import settings
 from .http_client import build_session, fetch
 from .logging_config import setup_logger
-
 
 logger = setup_logger(__name__)
 

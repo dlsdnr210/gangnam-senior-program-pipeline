@@ -2,7 +2,6 @@
 
 from src.data_collection_pipeline import run_pipeline
 
-
 if __name__ == "__main__":
     result = run_pipeline(
         incremental=True,

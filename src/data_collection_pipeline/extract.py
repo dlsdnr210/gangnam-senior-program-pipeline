@@ -1,7 +1,7 @@
 """목록 HTML에서 공지사항 메타데이터 추출."""
 
-from pathlib import Path
 import re
+from pathlib import Path
 from urllib.parse import urljoin
 
 import pandas as pd
@@ -9,7 +9,6 @@ from bs4 import BeautifulSoup, Tag
 
 from .config import settings
 from .logging_config import setup_logger
-
 
 logger = setup_logger(__name__)
 
@@ -119,12 +118,10 @@ def run_extract(raw_batch_dir: Path) -> Path:
                 raw_file.name,
                 len(df),
             )
-        except Exception as exc:
-            failed += 1
-            logger.exception(
-                "목록 파싱 실패 | %s | %s",
-                raw_file.name,
-                exc,
+        except Exception:
+              logger.exception(
+              "목록 파싱 실패 | %s",
+               raw_file.name,
             )
 
     if not frames:

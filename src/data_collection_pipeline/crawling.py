@@ -1,13 +1,13 @@
-"""강남노인종합복지관 공지사항 목록 HTML 수집."""
+"""강남 소재 노인종합복지관 공지사항 목록 HTML 수집."""
 
+import time
 from datetime import datetime
 from pathlib import Path
-import time
+from zoneinfo import ZoneInfo
 
 from .config import settings
 from .http_client import build_session, fetch
 from .logging_config import setup_logger
-
 
 logger = setup_logger(__name__)
 
@@ -18,7 +18,9 @@ def ensure_directory(path: Path) -> Path:
 
 
 def create_batch_id() -> str:
-    return datetime.now().strftime("%Y%m%d_%H%M%S")
+    return datetime.now(
+        ZoneInfo("Asia/Seoul")
+    ).strftime("%Y%m%d_%H%M%S")
 
 
 def build_page_url(page: int) -> str:
@@ -46,8 +48,11 @@ def run_crawling(
 
     if start_page < 1:
         raise ValueError("start_page는 1 이상이어야 합니다.")
+
     if end_page < start_page:
-        raise ValueError("end_page는 start_page 이상이어야 합니다.")
+        raise ValueError(
+            "end_page는 start_page 이상이어야 합니다."
+        )
 
     batch_dir = ensure_directory(
         settings.raw_list_dir / batch_id
@@ -69,26 +74,31 @@ def run_crawling(
 
         try:
             response = fetch(session, url)
+
             saved = save_list_html(
                 response.content,
                 batch_dir,
                 page,
             )
+
             succeeded += 1
+
             logger.info(
-                "목록 수집 성공 | page=%s | status=%s | bytes=%s | %s",
+                "목록 수집 성공 | "
+                "page=%s | status=%s | bytes=%s | %s",
                 page,
                 response.status_code,
                 len(response.content),
                 saved.name,
             )
-        except Exception as exc:
+
+        except Exception:
             failed += 1
+
             logger.exception(
-                "목록 수집 실패 | page=%s | url=%s | error=%s",
+                "목록 수집 실패 | page=%s | url=%s",
                 page,
                 url,
-                exc,
             )
 
         if page < end_page:
@@ -102,6 +112,8 @@ def run_crawling(
     )
 
     if succeeded == 0:
-        raise RuntimeError("수집에 성공한 목록 페이지가 없습니다.")
+        raise RuntimeError(
+            "수집에 성공한 목록 페이지가 없습니다."
+        )
 
     return batch_dir

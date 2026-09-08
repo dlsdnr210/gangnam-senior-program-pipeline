@@ -1,11 +1,10 @@
 """환경변수와 프로젝트 설정을 한 곳에서 관리한다."""
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
-import os
 
 from dotenv import load_dotenv
-
 
 PROJECT_DIR = Path(__file__).resolve().parents[2]
 load_dotenv(PROJECT_DIR / ".env")

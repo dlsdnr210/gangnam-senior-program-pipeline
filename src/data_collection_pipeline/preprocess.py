@@ -1,15 +1,14 @@
 """상세 수집 결과 전처리, 중복 제거, 품질 검증."""
 
-from pathlib import Path
 import hashlib
 import re
+from pathlib import Path
 
 import pandas as pd
 
 from .config import settings
 from .logging_config import setup_logger
 from .validation import validate_dataframe
-
 
 logger = setup_logger(__name__)
 

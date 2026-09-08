@@ -1,10 +1,8 @@
 """증분 수집을 위한 마지막 처리 상태 저장."""
 
 import json
-from pathlib import Path
 
 from .config import settings
-
 
 STATE_FILE = settings.state_dir / "crawl_state.json"
 

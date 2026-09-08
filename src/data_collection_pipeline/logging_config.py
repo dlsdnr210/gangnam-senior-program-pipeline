@@ -1,7 +1,7 @@
 """콘솔과 파일에 동시에 기록하는 로깅 설정."""
-
 import logging
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from .config import settings
 
@@ -26,7 +26,7 @@ def setup_logger(name: str = "senior_pipeline") -> logging.Logger:
 
     log_path = (
         settings.log_dir
-        / f"pipeline_{datetime.now():%Y%m%d}.log"
+        / f"pipeline_{datetime.now(ZoneInfo("Asia/Seoul")):%Y%m%d}.log"
     )
     file_handler = logging.FileHandler(
         log_path,

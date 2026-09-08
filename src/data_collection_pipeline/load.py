@@ -11,7 +11,6 @@ from sqlalchemy.engine import Engine
 from .config import settings
 from .logging_config import setup_logger
 
-
 logger = setup_logger(__name__)
 
 
